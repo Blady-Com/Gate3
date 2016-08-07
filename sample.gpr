@@ -1,0 +1,29 @@
+--
+-- Project file for sample applications
+--
+--
+--
+with "gtkada";
+
+project Sample is
+
+   type Gtkada_Kind_Type is
+      ("static", "relocatable");
+   GTK_Lib_Type : Gtkada_Kind_Type := external ("LIBRARY_TYPE", "relocatable");
+
+   for Object_Dir use "obj";
+   for Exec_Dir use ".";
+--   for Main use ("lady.adb", "editor.adb", "lorenz.adb", "calculator.adb");
+   for Source_Dirs use ("code");
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-O2", "-gnat05", "-gnatwa", "-gnata", "-fstack-check");
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-s", "-m");
+   end Builder;
+
+
+end Sample;
+

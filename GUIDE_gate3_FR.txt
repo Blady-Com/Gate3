@@ -1,0 +1,121 @@
+
+
+Gate3 : Maquettage Ada pour Glade3
+
+
+1/ Utilisation basique
+======================
+
+Utilisation: gate3 [options] glade3-file
+Options:
+    -h --help                 message d'aide
+    --version                 numéro de version
+    -m proc_name              Proc_Name : Ada main procedure name
+    -d some/dir               recherche le fichier d'entrée dans some/dir
+    -o some/dir               some/dir : repertoire de sortie
+    -p                        crée le repertoire de sortie s'il n'existe pas.
+
+
+Exemple :
+                $>./gate3 -p -o code -d glade simple.glade
+
+    en entrée le fichier <glade/simple.glade> et en sortie <code/simple.ada>
+    -p  => crée le sous-repertoire <code> s'il n'existe pas.
+
+
+2/ Tutoriel
+===========
+
+  La construction pas à pas d'une application GtkAda de calcul de
+  factorielle.
+  Code de P. Pignard : le code original est disponible à
+   http://blady.pagesperso-orange.fr/telechargements/gtkada/Essai2a.tgz
+
+  Aller dans le sous-repertoire /tutorial
+
+  Etape 1 : l'IHM a été construite avec glade 3.8
+               => on récupère un fichier XML <factorial.glade>
+
+  Etape 2 : construction d'une maquette de code à partir de la description XML.
+        3 sous-étapes :
+          1/ utiliser gate3 pour generer un fichier Ada *.ada unique avec de
+             multiples unités
+          2/ utiliser gnatchop sur le fichier précédent pour séparer les
+             unités Ada en fichiers *.ads et *.adb
+          3/ construire l'executable avec gnatmake en utilisant un fichier
+             projet tutorial.gpr
+
+        Le script g2code avec le projet tutorial.gpr le fera à votre place
+                   $>./g2code.sh factorial (Linux)
+                   $>g2code factorial    (Windows)
+
+  Etape 3 : lancer la maquette de code
+                   $>./factorial
+               même rendu que dans glade : 1 bouton d'entrée et un bouton pour
+               quitter. Pas encore spectaculaire !
+
+  Etape 4 : ajouter la logique en implementant un vrai corps pour les callbacks.
+
+               Le résultat sera la véritable implémentation :
+                     <window1_callbacks.arb> (arb = Ada real body)
+               (il faut eviter les suffixes en .ads et .adb car gnatchop écrase
+                ces fichiers)
+               Copier src/window1_callbacks.arb dans src/window1_callbacks.adb
+
+               Construction de l'appli :
+                     $>gnatmake -Ptutorial factorial.adb
+
+               Lancer :
+                     $> ./factorial
+               ou    $> factorial
+
+               Voilà c'est fini !
+
+3/ Exemples de code
+===================
+
+5 exemples de fichiers XML .glade sont dans le sous-répertoire /glade
+  - simple     : très basique "hello world"
+  - editor     : une fenêtre avec menu
+  - calculator : menu + entrée + boutons
+  - lorenz     : une zone de dessin et une boîte à boutons verticale
+  - lady       : idem
+
+*** CES FICHIERS SONT POUR GLADE 3.8 et NE SONT PAS GARANTIS AVEC GLADE 3.12 **
+En particulier, lorenz utilise un <expose-event> qui n'est plus supporté dans
+ Glade3.12, les boites Vbox et Hbox n'existent plus.
+
+Pour produire le code des exemples :
+utiliser ./sample.sh (ou sample.bat pour Windows)
+
+
+
+4/ Adapter la sortie
+=====================
+
+les fichiers template utilisés pour generer du code :
+          gate3_header.tmplt    en-tete devant le main (+ gate3_license.txt)
+          gate3_license.txt     MIT license (a changer a votre convenance))
+          gate3_main.tmplt      procedure main
+          gate3_spec.tmplt      package specification des callbacks
+          gate3_body.tmplt      package body des callbacks
+
+Verifier la documentation dans /doc/templates_parser.html pour la syntaxe
+si vous voulez modifier le format de sortie.
+Il n'est pas nécessaire de recompiler gate3 pour changer de format.
+
+
+5/ Legacy code
+==============
+
+   Dans /legacy vous trouverez des fichiers .glade d'anciennes versions de
+   Gtk
+   Ils servent pour des tests and et ne sont pas fonctionnels avec GtkAda.2.24
+
+   GladeToBac :
+
+
+   Sc_Timer :
+   Programme de test de 2 fenêtres
+   fonction obsolete : il faut remplacer OptionMenu par une Combobox
+

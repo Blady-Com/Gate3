@@ -1,0 +1,44 @@
+@@--
+@@-- Gate3 : Template file for package body
+@@--
+-----------------------------------------------------------------------------
+@@INCLUDE@@ gate3_license.txt
+-----------------------------------------------------------------------------
+-- units from Gtk
+with Gtk.Main;       use Gtk.Main;
+with Gtk.Builder;    use Gtk.Builder;
+with Gtk.Widget;     use Gtk.Widget;
+
+-- Ada predefined units
+with Ada.Text_IO;    use Ada.Text_IO;
+
+-- Application specific units
+
+package body @_PACKAGE_@_Callbacks  is
+
+@@TABLE@@
+   -----------------------------------------------
+   -- @_ADA_HANDLER_@
+   -----------------------------------------------
+
+     @@IF@@ @_CB_PROC_@
+   procedure @_ADA_HANDLER_@ (Builder : access Gtkada_Builder_Record'Class) is
+     @@ELSE@@
+   function @_ADA_HANDLER_@  (Builder : access Gtkada_Builder_Record'Class)
+      return Boolean is
+     @@END_IF@@
+      pragma Unreferenced (Builder);
+   begin
+      Put_Line ("Within handler @_ADA_HANDLER_@");
+     @@IF@@ @_HAS_QUIT_@
+      Gtk.Main.Main_Quit;
+     @@END_IF@@
+     @@IF@@ not @_CB_PROC_@
+      return False;
+     @@END_IF@@
+   end @_ADA_HANDLER_@;
+
+@@END_TABLE@@
+
+end @_PACKAGE_@_Callbacks;
+

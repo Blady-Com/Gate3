@@ -1,0 +1,39 @@
+--
+-- Project file to build gate3
+--
+-- Linux / Windows / Mac
+--
+--
+-- use env variable GPR_PROJECT_PATH to point to the correct location of
+-- gtkada.gpr and  templates_parser.gpr
+--
+with "gtkada";
+with "templates_parser";
+
+project Gate3 is
+
+   type Gtkada_Kind_Type is
+      ("static", "relocatable");
+   Library_Type : Gtkada_Kind_Type := external ("LIBRARY_TYPE", "relocatable");
+   for Object_Dir use "obj";
+   for Exec_Dir use ".";
+   for Source_Dirs use ("src");
+   for Main use ("gate3.adb");
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-O2", "-gnat05", "-gnatwa", "-fstack-check");
+   end Compiler;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-s", "-m");
+   end Builder;
+
+   package Pretty_Printer is
+      for Default_Switches ("ada") use ("--no-separate-is");
+   end Pretty_Printer;
+
+   package Linker is
+   end Linker;
+
+end Gate3;
+

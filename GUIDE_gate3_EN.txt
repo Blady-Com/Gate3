@@ -1,0 +1,116 @@
+
+
+Gate3 : Ada code sketcher for Glade3
+
+
+1/ Basic use
+============
+
+Usage: gate3 [options] glade3-file
+Options:
+    -h --help                 show this message
+    --version                 show version
+    -m proc_name              Proc_Name : Ada main procedure name
+    -d some/dir               search some/dir for input files
+    -o some/dir               some/dir : directory for output
+    -p                        create output directory
+
+Example :
+ $>./gate3 -p -o code -d glade simple.glade
+
+    input is the file <glade/simple.glade> and output file <code/simple.ada>
+    -p  => creates the subdirectory <code> if it does not exists.
+
+
+2/ Tutorial
+===========
+
+  A step by step construction of a GtkAda application for computing factorials.
+  Courtesy of P. Pignard : original code at
+   http://blady.pagesperso-orange.fr/telechargements/gtkada/Essai2a.tgz)
+
+  Goto to subdirectory tutorial
+
+  First step : the UI has been designed with glade 3.8
+               => you have a XML file <factorial.glade>
+
+  Second step : building a skeleton code from the XML description
+        3 steps are required :
+          1/ using gate3 to generate a single Ada file with multiple units
+          2/ gnatchop the previous file in separate Ada units
+          3/ build the executable with gnatmake using a project file
+
+        The script g2code.sh together with the project tutorial.gpr
+        does it for you :
+
+                   $>./g2code.sh factorial (Linux)
+                   $>g2code factorial      (Windows)
+
+  Third step : run the skeleton code
+                   $>./factorial
+               You have the lay-out : 1 input button  and 1 quit button
+               Not a big deal yet !
+
+  Fourth step : add the logic by implementing a real body for the callback
+
+                You end up with package body <copy window1_callbacks.arb>
+                (keep a different name because gnatchop overwrites files)
+
+                copy src/window1_callbacks.arb (arb = Ada real body) onto
+                src/window1_callbacks.adb
+
+                build the real app :
+                        $>gnatmake -Ptutorial factorial.adb
+
+                launch :
+                        $> ./factorial
+                 or     $> factorial
+
+                That's all !
+
+
+3/ Code samples
+===============
+
+5 samples of code are in the subdirectory /glade
+  - simple     : most basic "hello world"
+  - editor     : a window with a menu
+  - calculator : menu + entry + buttons
+  - lorenz     : a drawing area and button box
+  - lady       : ditto
+*** THESE FILES COME FROM GLADE 3.8 and ARE NOT GUARANTEED FOR GLADE 3.12 ***
+
+Especially lorenz uses an expose-event that is no longer supported in Glade3.12
+
+running ./sample.sh (or sample.bat on Win) builds the samples
+
+
+4/ Customizing output
+=====================
+
+The template files used to generate code :
+          gate3_header.tmplt    header in front of main (+ gate3_license.txt)
+          gate3_license.txt     MIT license (change to whatever you need)
+          gate3_main.tmplt      main procedure
+          gate3_spec.tmplt      package specification of callbacks
+          gate3_body.tmplt      package body of callbacks
+
+Check the /doc/templates_parser.html for the syntax if you want to modify
+the output format.
+You don't have to recompile gate3 to change the format.
+
+
+5/ legacy code
+==============
+
+   The legacy directory contains glade files from older version of gtk.
+   They are just used for tests since they weight more than 1000 lines.
+   Don't expect them to be compliant to Gtk2.24
+
+   GladeToBac :
+
+   Sc_Timer :
+   Program used to test 2 windows
+   An obsolete feature : need to upgrade OptionMenu to Combobox
+
+

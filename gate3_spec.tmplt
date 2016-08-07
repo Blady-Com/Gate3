@@ -1,0 +1,22 @@
+@@--
+@@-- Gate3 : Template file for package specification
+@@--
+-----------------------------------------------------------------------------
+@@INCLUDE@@ gate3_license.txt
+-----------------------------------------------------------------------------
+with Gtkada.Builder; use Gtkada.Builder;
+
+package @_PACKAGE_@_Callbacks  is
+
+@@TABLE@@
+     @@IF@@ @_CB_PROC_@
+   procedure @_ADA_HANDLER_@ (Builder : access Gtkada_Builder_Record'Class);
+     @@ELSE@@
+   function @_ADA_HANDLER_@  (Builder : access Gtkada_Builder_Record'Class)
+      return Boolean;
+     @@END_IF@@
+
+@@END_TABLE@@
+
+end @_PACKAGE_@_Callbacks;
+

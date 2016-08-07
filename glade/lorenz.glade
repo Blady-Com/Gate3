@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="2.18"/>
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkWindow" id="lorenz_window">
+    <property name="width_request">860</property>
+    <property name="height_request">500</property>
+    <property name="visible">True</property>
+    <property name="app_paintable">True</property>
+    <property name="can_focus">False</property>
+    <property name="border_width">20</property>
+    <property name="title" translatable="yes">Lorenz chaotic attractor - GTK Ada drawing demo</property>
+    <property name="resizable">False</property>
+    <property name="window_position">center</property>
+    <property name="default_width">800</property>
+    <property name="default_height">420</property>
+    <property name="icon">gps_48.png</property>
+    <signal name="destroy" handler="quit_lorenz" swapped="no"/>
+    <child>
+      <object class="GtkHBox" id="h_box">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="border_width">15</property>
+        <child>
+          <object class="GtkHBox" id="plot_box">
+            <property name="width_request">610</property>
+            <property name="height_request">410</property>
+            <property name="visible">True</property>
+            <property name="sensitive">False</property>
+            <property name="can_focus">False</property>
+            <property name="border_width">20</property>
+            <property name="homogeneous">True</property>
+            <child>
+              <object class="GtkDrawingArea" id="plot_area">
+                <property name="width_request">600</property>
+                <property name="height_request">400</property>
+                <property name="visible">True</property>
+                <property name="app_paintable">True</property>
+                <property name="can_focus">False</property>
+                <property name="events">GDK_EXPOSURE_MASK | GDK_STRUCTURE_MASK</property>
+                <property name="double_buffered">False</property>
+                <signal name="expose-event" handler="on_plot_area_expose_event" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkVButtonBox" id="vert_buttonbox">
+            <property name="width_request">100</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="receives_default">True</property>
+            <property name="homogeneous">True</property>
+            <child>
+              <object class="GtkButton" id="start">
+                <property name="label">Start</property>
+                <property name="visible">True</property>
+                <property name="app_paintable">True</property>
+                <property name="can_focus">True</property>
+                <property name="has_focus">True</property>
+                <property name="is_focus">True</property>
+                <property name="can_default">True</property>
+                <property name="receives_default">False</property>
+                <property name="use_underline">True</property>
+                <signal name="clicked" handler="start" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="pause">
+                <property name="label">Pause</property>
+                <property name="visible">True</property>
+                <property name="app_paintable">True</property>
+                <property name="can_focus">True</property>
+                <property name="can_default">True</property>
+                <property name="receives_default">False</property>
+                <signal name="clicked" handler="freeze" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="resume">
+                <property name="label">Resume</property>
+                <property name="visible">True</property>
+                <property name="app_paintable">True</property>
+                <property name="can_focus">True</property>
+                <property name="can_default">True</property>
+                <property name="receives_default">False</property>
+                <signal name="clicked" handler="resume" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="clear">
+                <property name="label">gtk-clear</property>
+                <property name="visible">True</property>
+                <property name="app_paintable">True</property>
+                <property name="can_focus">True</property>
+                <property name="can_default">True</property>
+                <property name="receives_default">False</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="clear_area" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="quit">
+                <property name="label">gtk-quit</property>
+                <property name="visible">True</property>
+                <property name="app_paintable">True</property>
+                <property name="can_focus">True</property>
+                <property name="can_default">True</property>
+                <property name="receives_default">False</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="quit_lorenz" after="yes" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">4</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
