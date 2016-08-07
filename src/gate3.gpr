@@ -1,0 +1,60 @@
+--
+-- Project file to build gate3
+--
+-- Linux / Windows / Mac
+--
+--
+-- use env variable GPR_PROJECT_PATH to point to the correct location of
+-- gtkada.gpr and templates_parser.gpr
+--
+with "gtkada";
+with "templates_parser";
+
+project Gate3 is
+
+   type Build_Type is ("Debug", "Release");
+   Build : Build_Type := external ("BUILD", "Debug");
+
+   for Object_Dir use "../obj";
+   for Exec_Dir use "../bin";
+   for Source_Dirs use (".");
+   for Main use ("gate3.adb");
+
+   Common_Options :=
+     ("-gnat12", "-gnaty3abcdefhiIklmnoOprstx");
+   Debug_Options :=
+     ("-g", "-gnata", "-gnatVa", "-gnatQ", "-gnato", "-Wall", "-fstack-check", "-gnatw.eH.YD");
+   Release_Options :=
+     ("-O2", "-gnatn");
+
+   package Compiler is
+      case Build is
+         when "Release" =>
+            for Default_Switches ("Ada") use Common_Options & Release_Options;
+         when "Debug" =>
+            for Default_Switches ("Ada") use Common_Options & Debug_Options;
+            end case;
+   end Compiler;
+
+   package Binder is
+      for Default_Switches ("Ada") use ("-E");
+   end Binder;
+
+   package Builder is
+      for Default_Switches ("ada") use ("-s", "-m");
+   end Builder;
+
+   package Pretty_Printer is
+      for Default_Switches ("ada") use ("--no-separate-is");
+   end Pretty_Printer;
+
+   package Install is
+      for Artifacts ("share/gate3/tmplt") use ("*.tmplt", "gate3_license.txt");
+      for Artifacts ("share/gate3/doc") use ("GUIDE_gate3_??.txt");
+      for Artifacts ("share/gate3") use ("tutorial");
+      for Artifacts ("share/gate3") use ("glade");
+      for Artifacts ("bin") use ("gate3.sh");
+   end Install;
+
+end Gate3;
+

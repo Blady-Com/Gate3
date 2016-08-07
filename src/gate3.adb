@@ -88,6 +88,9 @@ procedure Gate3 is
    -- The directory where the resulting Ada file will be written
    -- By default will be the directory of the input glade file
 
+   Template_Dir : UBS.String_Access := null;
+   -- The directory where the templates are read (default is current exec directory)
+
    Create_Output_Dir : Boolean := False;
 
    Option : Character;
@@ -120,6 +123,8 @@ procedure Gate3 is
         ("    -d some/dir               search some/dir for input files");
       Put_Line
         ("    -o some/dir               some/dir : directory for output");
+      Put_Line
+        ("    -t some/dir               some/dir : directory for templates");
       Put_Line ("    -p                        create output directory");
       New_Line;
    end Print_Help;
@@ -127,6 +132,7 @@ procedure Gate3 is
    procedure Usage is
    begin
       Put_Line ("Usage: " & Command_Name & " [options] glade3-file");
+      Put_Line ("Help: " & Command_Name & " --help");
       New_Line;
    end Usage;
 
@@ -134,7 +140,7 @@ begin
    loop
       begin
          Option :=
-            GNAT.Command_Line.Getopt ("h -help -version m: d: o: p", False);
+            GNAT.Command_Line.Getopt ("h -help -version m: d: o: t: p", False);
          case Option is
             when 'h' =>
                Print_Help;
@@ -156,6 +162,8 @@ begin
                Output_Dir := new String'(Parameter);
             when 'd' =>
                Input_Dir := new String'(Parameter);
+            when 't' =>
+               Template_Dir := new String'(Parameter);
             when 'p' =>
                Create_Output_Dir := True;
             when others =>
@@ -170,15 +178,18 @@ begin
    end loop;
 
    -- Find where the gate3 exec file is.
-   -- Presently the template files are located in the same dir as the
-   -- gate3 exec is. Not clean, but portable.
+   -- Or find in Template_Dir if set.
    --
    --
    declare
       Gate3_Path : GNAT.OS_Lib.String_Access :=
          GNAT.OS_Lib.Locate_Exec_On_Path (Cmd);
    begin
-      if Gate3_Path = null then
+      if Template_Dir /= null then
+         Set_Template_Dir
+           (Ada.Directories.Containing_Directory (Template_Dir.all));
+         -- setup the path where gate3 will find templates gate3_xxx.tmplt
+      elsif Gate3_Path = null then
          Put_Line ("Could not locate gate3 on Path ! stopping.");
          raise Program_Error;
       else
