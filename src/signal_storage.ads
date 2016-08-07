@@ -40,9 +40,7 @@ package Signal_Storage is
 
    procedure Initialize_Signals_Store;
 
-   procedure Store_Signal_Node
-     (Signal     : in Node_Ptr;
-      Top_Object : in Object_Index);
+   procedure Store_Signal_Node (Signal : in Node_Ptr; Top_Object : in Object_Index);
 
    function Get_Signal_Number return Natural;
    -- returns the total number of signals in the project

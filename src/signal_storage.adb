@@ -3,7 +3,7 @@ with Ada.Exceptions;        use Ada.Exceptions;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 with Gate3_Glib;            use Gate3_Glib;
 
-pragma Elaborate (GNAT.Regpat);
+pragma Elaborate_All (GNAT.Regpat);
 
 package body Signal_Storage is
 
@@ -34,13 +34,7 @@ package body Signal_Storage is
    -----------------------
    function Check_Cb_Type (Handler : String) return Cb_Type is
    begin
-      if GNAT.Regpat.Match
-            (Event_Pattern,
-             Handler,
-             Handler'First,
-             Handler'Last) >
-         0
-      then
+      if GNAT.Regpat.Match (Event_Pattern, Handler, Handler'First, Handler'Last) > 0 then
          return Func;
       end if;
 
@@ -79,9 +73,7 @@ package body Signal_Storage is
    -- Store_Signal_Node --
    -----------------------
 
-   procedure Store_Signal_Node
-     (Signal     : in Node_Ptr;
-      Top_Object : in Object_Index) is
+   procedure Store_Signal_Node (Signal : in Node_Ptr; Top_Object : in Object_Index) is
 
       Handler     : constant String := Get_Attribute (Signal, "handler");
       Ada_Handler : constant String := Gate3_Glib.To_Ada (Handler);
@@ -101,24 +93,18 @@ package body Signal_Storage is
       end loop;
 
       -- check if handler string gives a valid Ada identifier
-      if GNAT.Regpat.Match
-            (Ada_Identifier,
-             Ada_Handler,
-             Ada_Handler'First,
-             Ada_Handler'Last) =
-         0
+      if GNAT.Regpat.Match (Ada_Identifier, Ada_Handler, Ada_Handler'First, Ada_Handler'Last) =
+        0
       then
          -- Invalid identifier => Emit a warning with location
          declare
             Node_Chain : US.Unbounded_String :=
-               US.To_Unbounded_String (Get_Attribute (Signal, "name"));
-            A_Node     : Node_Ptr            := Signal;
+              US.To_Unbounded_String (Get_Attribute (Signal, "name"));
+            A_Node : Node_Ptr := Signal;
          begin
             loop
                if (A_Node.Tag.all = "object") then
-                  Node_Chain := Get_Attribute (A_Node, "id") &
-                                ":" &
-                                Node_Chain;
+                  Node_Chain := Get_Attribute (A_Node, "id") & ":" & Node_Chain;
                end if;
                exit when A_Node = Object_Store (Top_Object).Node;
                A_Node := A_Node.Parent;
@@ -137,13 +123,8 @@ package body Signal_Storage is
       if (Sig_Name = "destroy") or (Sig_Name = "delete-event") then
          Signal_Data.Has_Quit := True;
       elsif
-      -- check if handler string contains the string <quit>
-        GNAT.Regpat.Match
-           (Quit_Pattern,
-            Handler,
-            Handler'First,
-            Handler'Last) >
-        0
+         -- check if handler string contains the string <quit>
+        GNAT.Regpat.Match (Quit_Pattern, Handler, Handler'First, Handler'Last) > 0
       then
          Signal_Data.Has_Quit := True;
       else
@@ -155,8 +136,7 @@ package body Signal_Storage is
       First_Available_Item         := First_Available_Item + 1;
 
       -- increment top window signal number
-      Object_Store (Top_Object).Signumber :=
-        Object_Store (Top_Object).Signumber + 1;
+      Object_Store (Top_Object).Signumber := Object_Store (Top_Object).Signumber + 1;
    end Store_Signal_Node;
 
    -----------------------
@@ -179,16 +159,8 @@ package body Signal_Storage is
 
 begin
 
-   Compile
-     (Matcher    => Event_Pattern,
-      Expression => ".*event$",
-      Flags      => Case_Insensitive);
-   Compile
-     (Matcher    => Ada_Identifier,
-      Expression => "^[a-zA-Z](_?[a-zA-Z0-9])*$");
-   Compile
-     (Matcher    => Quit_Pattern,
-      Expression => "quit",
-      Flags      => Case_Insensitive);
+   Compile (Matcher => Event_Pattern, Expression => ".*event$", Flags => Case_Insensitive);
+   Compile (Matcher => Ada_Identifier, Expression => "^[a-zA-Z](_?[a-zA-Z0-9])*$");
+   Compile (Matcher => Quit_Pattern, Expression => "quit", Flags => Case_Insensitive);
 
 end Signal_Storage;

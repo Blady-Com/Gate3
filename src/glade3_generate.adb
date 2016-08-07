@@ -36,10 +36,7 @@ package body Glade3_Generate is
    function Print_Header (File_Name : String) return String;
    --  Generates header using gate3_header.tmplt
 
-   function Print_Main
-     (Project_Name : String;
-      Glade_Name   : String)
-      return         String;
+   function Print_Main (Project_Name : String; Glade_Name : String) return String;
    --  Generates main Ada procedure using gate3_main.tmplt
 
    function Print_Spec (Window_Nbr : Object_Index) return String;
@@ -59,9 +56,7 @@ package body Glade3_Generate is
    function Process
      (File_Name    : String;
       Main_Name    : String := "";
-      Project_Tree : Node_Ptr)
-      return         String
-   is
+      Project_Tree : Node_Ptr) return String is
       -- Scan the XML tree and outputs the text
 
       Result     : UBS.Unbounded_String;
@@ -124,42 +119,34 @@ package body Glade3_Generate is
    begin
 
       if Project_Name = "" then
-         Mainproc_Name :=
-           new String'(To_Ada (To_Lower (Base_Name (Glade_File))));
+         Mainproc_Name := new String'(To_Ada (To_Lower (Base_Name (Glade_File))));
       else
          Mainproc_Name := new String'(Project_Name);
       end if;
 
       if Output_Dir = "" then
          Output_Name :=
-           new String'(Compose
-                          (Containing_Directory (Glade_File),
-                           To_Lower (Base_Name (Glade_File)),
-                           "ada"));
+           new String'
+             (Compose
+                (Containing_Directory (Glade_File),
+                 To_Lower (Base_Name (Glade_File)),
+                 "ada"));
       else
          begin
-            if Exists (Output_Dir)
-              and then Kind (Output_Dir) = Directory
-            then
+            if Exists (Output_Dir) and then Kind (Output_Dir) = Directory then
                Output_Name :=
-                 new String'(Compose
-                                (Output_Dir,
-                                 To_Lower (Base_Name (Glade_File)),
-                                 "ada"));
+                 new String'(Compose (Output_Dir, To_Lower (Base_Name (Glade_File)), "ada"));
             else
                Output_Name :=
-                 new String'(Compose
-                                (Containing_Directory (Glade_File),
-                                 To_Lower (Base_Name (Glade_File)),
-                                 "ada"));
+                 new String'
+                   (Compose
+                      (Containing_Directory (Glade_File),
+                       To_Lower (Base_Name (Glade_File)),
+                       "ada"));
             end if;
          exception
             when Ada.Directories.Name_Error =>
-               Output_Name :=
-                 new String'(Compose
-                                ("",
-                                 To_Lower (Base_Name (Glade_File)),
-                                 "ada"));
+               Output_Name := new String'(Compose ("", To_Lower (Base_Name (Glade_File)), "ada"));
          end;
       end if;
 
@@ -169,8 +156,7 @@ package body Glade3_Generate is
       if Project = null then
          Raise_Exception
            (Bad_Xml'Identity,
-            "Gate3 Error : XML parsing with glib failed." &
-            "Check your glade file.");
+            "Gate3 Error : XML parsing with glib failed." & "Check your glade file.");
       end if;
 
       if Ada.Directories.Exists (Output_Name.all) then
@@ -178,9 +164,7 @@ package body Glade3_Generate is
       end if;
       Create (Output, Out_File, Output_Name.all);
 
-      Ada.Text_IO.Put
-        (Output,
-         Process (Glade_File, Mainproc_Name.all, Project));
+      Ada.Text_IO.Put (Output, Process (Glade_File, Mainproc_Name.all, Project));
 
       Close (Output);
       Put_Line ("Result file is : " & Output_Name.all);
@@ -206,8 +190,7 @@ package body Glade3_Generate is
          -- sanity check against old version of Glade
          Raise_Exception
            (Old_Version'Identity,
-            "Gate3 Error : Old version. " &
-            "The top tag must be [interface]");
+            "Gate3 Error : Old version. " & "The top tag must be [interface]");
       end if;
 
       Initialize_Signals_Store;
@@ -226,10 +209,10 @@ package body Glade3_Generate is
             begin
                -- scan only objects that can contain signals or shows
                if Class = "GtkAction" or
-                  Class = "GtkActionGroup" or
-                  Class = "GtkAboutDialog" or
-                  Class = "GtkDialog" or
-                  Class = "GtkWindow"
+                 Class = "GtkActionGroup" or
+                 Class = "GtkAboutDialog" or
+                 Class = "GtkDialog" or
+                 Class = "GtkWindow"
                then
                   Top_Widget_Nbr                     := Top_Widget_Nbr + 1;
                   Object_Store (Top_Widget_Nbr).Node := P;
@@ -269,9 +252,7 @@ package body Glade3_Generate is
             Store_Signal_Node (P, Top_Window);
 
             if Debug then
-               Put
-                 ("    Registering signal name [" &
-                  Get_Attribute (P, "name"));
+               Put ("    Registering signal name [" & Get_Attribute (P, "name"));
                Put ("]; handler [" & Get_Attribute (P, "handler"));
                Put_Line ("]; widget [" & Get_Attribute (N, "id") & "]");
                Put_Line
@@ -284,7 +265,7 @@ package body Glade3_Generate is
 
             while Q /= null loop
                if Q.Tag.all = "object" then
-                  --go into recursion
+                  -- go into recursion
                   Scan_Object (Q, Top_Window);
                end if;
 
@@ -304,13 +285,11 @@ package body Glade3_Generate is
    ------------------
 
    function Print_Header (File_Name : String) return String is
-      File_Tag     : constant Templates_Parser.Tag                      :=
-         +File_Name;
+      File_Tag     : constant Templates_Parser.Tag                      := +File_Name;
       Translations : constant Templates_Parser.Translate_Table (1 .. 1) :=
         (1 => Templates_Parser.Assoc ("FILE", File_Tag));
 
-      Header_Template : constant String :=
-         Compose (Template_Dir.all, "gate3_header", "tmplt");
+      Header_Template : constant String := Compose (Template_Dir.all, "gate3_header", "tmplt");
 
    begin
       return Templates_Parser.Parse (Header_Template, Translations);
@@ -320,11 +299,7 @@ package body Glade3_Generate is
    -- Print_Main   --
    ------------------
 
-   function Print_Main
-     (Project_Name : String;
-      Glade_Name   : String)
-      return         String
-   is
+   function Print_Main (Project_Name : String; Glade_Name : String) return String is
       Window_Nbr    : constant Object_Index := Get_Object_Number;
       Signal_Number : constant Natural      := Get_Signal_Number;
 
@@ -340,8 +315,7 @@ package body Glade3_Generate is
 
       Translations : Templates_Parser.Translate_Table (1 .. 7);
 
-      Main_Template : constant String :=
-         Compose (Template_Dir.all, "gate3_main", "tmplt");
+      Main_Template : constant String := Compose (Template_Dir.all, "gate3_main", "tmplt");
    -- the template file is <gate3_main.tmplt> located in
    -- directory of gate3
 
@@ -349,20 +323,15 @@ package body Glade3_Generate is
 
       for I in 1 .. Window_Nbr loop
          declare
-            P     : constant String :=
-               Get_Attribute (Object_Store (I).Node, "id");
-            Class : constant String :=
-               Get_Attribute (Object_Store (I).Node, "class");
+            P     : constant String := Get_Attribute (Object_Store (I).Node, "id");
+            Class : constant String := Get_Attribute (Object_Store (I).Node, "class");
 
          begin
             Append (Objects, P);
             if Object_Store (I).Signumber > 0 then
                Append (Ada_Objects, To_Ada (P));
             end if;
-            if Class = "GtkAboutDialog" or
-               Class = "GtkDialog" or
-               Class = "GtkWindow"
-            then
+            if Class = "GtkAboutDialog" or Class = "GtkDialog" or Class = "GtkWindow" then
                Append (Shows, True);
             else
                Append (Shows, False);
@@ -372,8 +341,8 @@ package body Glade3_Generate is
 
       for I in 1 .. Signal_Number loop
          declare
-            Handler     : constant String :=
-               Get_Attribute (Retrieve_Signal_Node (I).Signal, "handler");
+            Handler : constant String :=
+              Get_Attribute (Retrieve_Signal_Node (I).Signal, "handler");
             Ada_Handler : constant String := To_Ada (Handler);
          begin
             Append (Signals, Handler);
@@ -412,8 +381,7 @@ package body Glade3_Generate is
 
       Translations : Templates_Parser.Translate_Table (1 .. 3);
 
-      Spec_Template : constant String :=
-         Compose (Template_Dir.all, "gate3_spec", "tmplt");
+      Spec_Template : constant String := Compose (Template_Dir.all, "gate3_spec", "tmplt");
    -- the template file is <gate3_spec.tmplt> located in
    -- directory of gate3
 
@@ -426,8 +394,7 @@ package body Glade3_Generate is
          if Signal.Top_Window = Window_Nbr then
             -- output only signals belonging to present window/object
             declare
-               Ada_Handler : constant String :=
-                  To_Ada (Get_Attribute (Signal.Signal, "handler"));
+               Ada_Handler : constant String := To_Ada (Get_Attribute (Signal.Signal, "handler"));
             begin
                Append (Ada_Handlers, Ada_Handler);
                if Signal.Callback = Proc then
@@ -469,8 +436,7 @@ package body Glade3_Generate is
 
       Translations : Templates_Parser.Translate_Table (1 .. 4);
 
-      Body_Template : constant String :=
-         Compose (Template_Dir.all, "gate3_body", "tmplt");
+      Body_Template : constant String := Compose (Template_Dir.all, "gate3_body", "tmplt");
    -- the template file is <gate3_body.tmplt> located in directory of gate3
 
    begin
@@ -481,8 +447,7 @@ package body Glade3_Generate is
          if Signal.Top_Window = Window_Nbr then
             -- output only signals belonging to present window/object
             declare
-               Ada_Handler : constant String :=
-                  To_Ada (Get_Attribute (Signal.Signal, "handler"));
+               Ada_Handler : constant String := To_Ada (Get_Attribute (Signal.Signal, "handler"));
             begin
                Append (Ada_Handlers, Ada_Handler);
                if Signal.Callback = Proc then

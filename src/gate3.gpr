@@ -21,7 +21,7 @@ project Gate3 is
    for Main use ("gate3.adb");
 
    Common_Options :=
-     ("-gnat12", "-gnaty3abcdefhiIklmnoOprstx");
+     ("-gnat12", "-gnaty3abCefhiklnOprStuM99");
    Debug_Options :=
      ("-g", "-gnata", "-gnatVa", "-gnatQ", "-gnato", "-Wall", "-fstack-check", "-gnatw.eH.YD");
    Release_Options :=

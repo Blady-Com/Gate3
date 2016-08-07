@@ -66,7 +66,7 @@ procedure Gate3 is
    package UBS renames Ada.Strings.Unbounded;
 
    Version : constant String := "0.4 (4-Jan-2013)";
-   --gate3 version and release date
+   -- gate3 version and release date
 
    Cmd : constant String := Ada.Command_Line.Command_Name;
    -- command typed to launch gate3
@@ -117,14 +117,10 @@ procedure Gate3 is
       Put_Line ("Options:");
       Put_Line ("    -h --help                 show this message");
       Put_Line ("    --version                 show version");
-      Put_Line
-        ("    -m proc_name              Proc_Name : Ada main procedure name");
-      Put_Line
-        ("    -d some/dir               search some/dir for input files");
-      Put_Line
-        ("    -o some/dir               some/dir : directory for output");
-      Put_Line
-        ("    -t some/dir               some/dir : directory for templates");
+      Put_Line ("    -m proc_name              Proc_Name : Ada main procedure name");
+      Put_Line ("    -d some/dir               search some/dir for input files");
+      Put_Line ("    -o some/dir               some/dir : directory for output");
+      Put_Line ("    -t some/dir               some/dir : directory for templates");
       Put_Line ("    -p                        create output directory");
       New_Line;
    end Print_Help;
@@ -139,8 +135,7 @@ procedure Gate3 is
 begin
    loop
       begin
-         Option :=
-            GNAT.Command_Line.Getopt ("h -help -version m: d: o: t: p", False);
+         Option := GNAT.Command_Line.Getopt ("h -help -version m: d: o: t: p", False);
          case Option is
             when 'h' =>
                Print_Help;
@@ -182,19 +177,16 @@ begin
    --
    --
    declare
-      Gate3_Path : GNAT.OS_Lib.String_Access :=
-         GNAT.OS_Lib.Locate_Exec_On_Path (Cmd);
+      Gate3_Path : GNAT.OS_Lib.String_Access := GNAT.OS_Lib.Locate_Exec_On_Path (Cmd);
    begin
       if Template_Dir /= null then
-         Set_Template_Dir
-           (Ada.Directories.Containing_Directory (Template_Dir.all));
-         -- setup the path where gate3 will find templates gate3_xxx.tmplt
+         Set_Template_Dir (Ada.Directories.Containing_Directory (Template_Dir.all));
+      -- setup the path where gate3 will find templates gate3_xxx.tmplt
       elsif Gate3_Path = null then
          Put_Line ("Could not locate gate3 on Path ! stopping.");
          raise Program_Error;
       else
-         Set_Template_Dir
-           (Ada.Directories.Containing_Directory (Gate3_Path.all));
+         Set_Template_Dir (Ada.Directories.Containing_Directory (Gate3_Path.all));
          -- setup the path where gate3 will find templates gate3_xxx.tmplt
          GNAT.OS_Lib.Free (Gate3_Path);
       end if;
@@ -219,33 +211,27 @@ begin
    elsif Ada.Directories.Exists (Input_Dir.all) then
       if (Ada.Directories.Kind (Input_Dir.all) = Directory) then
          GladeFileName :=
-           new String'(Compose
-                          (Input_Dir.all,
-                           Base_Name (InputFileName.all),
-                           Extension (InputFileName.all)));
+           new String'
+             (Compose
+                (Input_Dir.all,
+                 Base_Name (InputFileName.all),
+                 Extension (InputFileName.all)));
       else
-         Put_Line
-           ("Gate3 Error : input parameter [" &
-            Input_Dir.all &
-            "] is not a directory.");
+         Put_Line ("Gate3 Error : input parameter [" & Input_Dir.all & "] is not a directory.");
          Clean_All;
          Set_Exit_Status (1);
          return;
       end if;
 
    else
-      Put_Line
-        ("Gate3 Error : input directory [" &
-         Input_Dir.all &
-         "] does not exist.");
+      Put_Line ("Gate3 Error : input directory [" & Input_Dir.all & "] does not exist.");
       Clean_All;
       Set_Exit_Status (1);
       return;
    end if;
 
    if not Ada.Directories.Exists (GladeFileName.all) then
-      Put_Line
-        ("Gate3 Error : file [" & GladeFileName.all & "] does not exist.");
+      Put_Line ("Gate3 Error : file [" & GladeFileName.all & "] does not exist.");
       Clean_All;
       Set_Exit_Status (1);
       return;
@@ -266,19 +252,13 @@ begin
             exception
                when E : others =>
                   Put_Line ("Exception = " & Exception_Name (E));
-                  Put_Line
-                    ("Gate3 Error : Invalid directory name [" &
-                     Output_Dir.all &
-                     "].");
+                  Put_Line ("Gate3 Error : Invalid directory name [" & Output_Dir.all & "].");
                   Clean_All;
                   Set_Exit_Status (2);
                   return;
             end;
          else
-            Put_Line
-              ("Gate3 Error : Output directory [" &
-               Output_Dir.all &
-               "] does not exist.");
+            Put_Line ("Gate3 Error : Output directory [" & Output_Dir.all & "] does not exist.");
             Clean_All;
             Set_Exit_Status (2);
             return;
@@ -286,8 +266,7 @@ begin
       else
          -- output dir exists, stops when it is not a dir
          if not (Ada.Directories.Kind (Output_Dir.all) = Directory) then
-            Put_Line
-              ("Gate3 Error : [" & Output_Dir.all & "] is not a directory.");
+            Put_Line ("Gate3 Error : [" & Output_Dir.all & "] is not a directory.");
             Clean_All;
             Set_Exit_Status (2);
             return;
@@ -295,13 +274,9 @@ begin
       end if;
    end if;
 
-   Generate
-     (GladeFileName.all,
-      Project_Name => Main_Proc_Name.all,
-      Output_Dir   => Output_Dir.all);
+   Generate (GladeFileName.all, Project_Name => Main_Proc_Name.all, Output_Dir => Output_Dir.all);
 
-   Put_Line
-     ("Gate3 v" & Version & " | Your file has been successfully processed.");
+   Put_Line ("Gate3 v" & Version & " | Your file has been successfully processed.");
    Clean_All;
 exception
    when System.Assertions.Assert_Failure =>
