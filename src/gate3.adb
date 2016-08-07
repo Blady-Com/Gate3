@@ -180,7 +180,7 @@ begin
       Gate3_Path : GNAT.OS_Lib.String_Access := GNAT.OS_Lib.Locate_Exec_On_Path (Cmd);
    begin
       if Template_Dir /= null then
-         Set_Template_Dir (Ada.Directories.Containing_Directory (Template_Dir.all));
+         Set_Template_Dir (Template_Dir.all);
       -- setup the path where gate3 will find templates gate3_xxx.tmplt
       elsif Gate3_Path = null then
          Put_Line ("Could not locate gate3 on Path ! stopping.");

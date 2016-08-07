@@ -1,12 +1,10 @@
 @@--
-@@-- Gate3 : Template file for main procedure -- Gtk3 version
-@@-- Date : 15 Dec 2013
+@@-- Gate3 : Template file for main procedure -- Gtk2 version
+@@-- if you want to use gtk3 see README.txt
 @@--
 -- units from Gtk
 with Gtk;            use Gtk;
 with Gtk.Main;
-with Glib;           use Glib;
-with Glib.Object;
 with Glib.Error;     use Glib.Error;
 with Gtk.Widget;     use Gtk.Widget;
 with Gtkada.Builder; use Gtkada.Builder;
@@ -23,7 +21,7 @@ with @_ADA_OBJECT_@_Callbacks; use @_ADA_OBJECT_@_Callbacks;
 procedure @_PROJECT_@ is
 
    Builder       : Gtkada_Builder;
-   Error         : aliased Glib.Error.GError;
+   Error         : Glib.Error.GError;
    GladeFileName : constant String := "@_GLADE_NAME_@";
 
 begin
@@ -33,10 +31,11 @@ begin
    -- Step 1: create a Builder and add the XML data
 
    Gtk_New (Builder);
-   if Add_From_File (Builder, GladeFileName, Error'Access) = 0 then
-       Put_Line ("Error : " & Get_Message (Error));
-       Error_Free (Error);
-       return;
+   Error := Add_From_File (Builder, GladeFileName);
+   if Error /= null then
+      Put_Line ("Error : " & Get_Message (Error));
+      Error_Free (Error);
+      return;
    end if;
 
    --  Step 2: add calls to "Register_Handler" to associate your
@@ -57,7 +56,7 @@ begin
 
 @@TABLE@@
      @@IF@@ @_SHOW_@
-   Show_All (Gtk.Widget.Gtk_Widget (Get_Object (Builder, "@_OBJECT_@")));
+   Show_All (Get_Widget (Builder, "@_OBJECT_@"));
      @@END_IF@@
 @@END_TABLE@@
    Gtk.Main.Main;
