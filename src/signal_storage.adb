@@ -159,7 +159,7 @@ package body Signal_Storage is
 
 begin
 
-   Compile (Matcher => Event_Pattern, Expression => ".*event$", Flags => Case_Insensitive);
+   Compile (Matcher => Event_Pattern, Expression => ".*event$|draw", Flags => Case_Insensitive);
    Compile (Matcher => Ada_Identifier, Expression => "^[a-zA-Z](_?[a-zA-Z0-9])*$");
    Compile (Matcher => Quit_Pattern, Expression => "quit", Flags => Case_Insensitive);
 
