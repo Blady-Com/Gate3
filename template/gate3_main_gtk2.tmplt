@@ -1,6 +1,5 @@
 @@--
 @@-- Gate3 : Template file for main procedure -- Gtk2 version
-@@-- if you want to use gtk3 see README.txt
 @@--
 -- units from Gtk
 with Gtk;            use Gtk;

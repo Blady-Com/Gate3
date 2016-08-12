@@ -10,8 +10,9 @@ DO NOT USE WITH GLADE 3.12 or YOU MAY ENCOUNTER COMPATIBILTY PROBLEMS !!
 Gate3 is limited in scope and does not generate User_Handler callbacks.
 It is just a simple tool to avoid tedious typing.
 
-Important notice : if you want to generate code for Gtk3, see last paragraph
+Important notice : if you want to generate code for Gtk2, see last paragraph
 
+Date : August   2016 - v05 release
 Date : January  2013 - v04 release
 Date : December 2013 - minor add-on for Gtk3
 
@@ -24,7 +25,7 @@ The program is licensed under the MIT license.
 
 you need
 -- GNAT compiler
--- GTKAda (tested with Gtk2.24 /should work with Gtk2.18) only Glib is used.
+-- GTKAda
 -- Templates_Parser (A module of Ada Web Server)
        Package Debian : libtemplates-parser11.6-dev
        Sources Git d'Adacore :
@@ -32,8 +33,6 @@ you need
 
        A convenient mirror to retrieve a single zip file :
        https://github.com/sogilis/template-parser
-
-
 
 
 ==== How to build Gate3 ====
@@ -55,13 +54,8 @@ GPR_PROJECT_PATH=/path/to/gtkada.gpr; export GPR_PROJECT_PATH
  /usr/share/ada/adainclude
 **************************************************************************
 
-To build just use the shell script :
-Linux      : setup permissions of scripts > chmod
-             ./build.sh
-
-Windows    : build.bat
-             IMPORTANT NOTICE : for Windows use LIBRARY_TYPE=relocatable
-                                static linking of Gtk does not work.
+To build just use the makefile script :
+$ make
 
 The build script compiles Gate3 and runs the simple.glade test case.
 
@@ -69,13 +63,10 @@ The build script compiles Gate3 and runs the simple.glade test case.
 
 1/Modify the license file gate3_license.txt to your particular needs
 
-2/Copy the following files in the directory of your choice (e.g. /usr/local/bin)
-gate3               -- executable
-gate3_license.txt   -- template files
-gate3_body.tmplt
-gate3_main.tmplt
-gate3_header.tmplt
-gate3_spec.tmplt
+2/Install in the directory of your choice (by default /usr/local)
+$ make install
+or in a custom directory
+$ make PREFIX=/path/to/dir install
 
 
 ==== Using Gate3 ====
@@ -87,6 +78,7 @@ Options:
     -m proc_name              Proc_Name : Ada main procedure name
     -d some/dir               search some/dir for input files
     -o some/dir               some/dir : directory for output
+    -t some/dir               some/dir : directory for templates
     -p                        create output directory
 
 
@@ -103,12 +95,12 @@ GLADE version 3.8.3
 Thanks to Brian Drummond for his suggestions and testing.
 Thanks to Pascal Pignard for his suggestions and testing and the Gtk3 template.
 
-==== Generating code for Gtk3 ====
+==== Generating code for Gtk2 ====
 
-There is no switch to enable both Gtk2/Gtk3 code generation. 
+There is no switch to enable both Gtk2/Gtk3 code generation.
 This would require a new version of gate3.
-Anyway, with just a change in template for the main you can generate code suitable for Gtk3.
+Anyway, with just a change in template for the main you can generate code suitable for Gtk2.
 In 2 steps :
-1/ rename file gate3_main.tmplt to gate3_main_gtk2.tmplt (to save it).
-2/ rename file gate3_main_gtk3.tmplt to gate3_main.tmplt
+1/ rename file gate3_main.tmplt to gate3_main_gtk3.tmplt (to save it).
+2/ rename file gate3_main_gtk2.tmplt to gate3_main.tmplt
 

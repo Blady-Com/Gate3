@@ -10,9 +10,10 @@ NE PAS UTILISER AVEC GLADE 3.12 ou VOUS ALLEZ RENCONTRER DES INCOMPATIBILITES!!
 Gate3 a un objectif limité et ne génère pas d'appels avec User_Handler.
 C'est un outil simple pour éviter la frappe fastidieuse.
 
-Note importante : si vous voulez generer du code pour Gtk3, voir le dernier paragraphe.
+Note importante : si vous voulez generer du code pour Gtk2, voir le dernier paragraphe.
 
-Date : January  2013 - version v04 
+Date : August   2016 - version v05
+Date : January  2013 - version v04
 Date : December 2013 - addition mineure pour Gtk3
 
 ==== Copyright ====
@@ -20,12 +21,11 @@ Date : December 2013 - addition mineure pour Gtk3
 Commentaires bienvenus à : francois_fabien@hotmail.com
 Ce programme est distribué sous license MIT.
 
-
 ==== Prerequis ====
 
 Il est nécessaire d'installer
 -- GNAT,
--- GTKAda (testé avec Gtk2.24 /doit supporter Gtk2.18) seulement Glib est utile
+-- GTKAda
 -- Templates_Parser (module inclus dans Ada Web Server)
        Package Debian : libtemplates-parser11.6-dev
        Sources Git d'Adacore :
@@ -36,6 +36,7 @@ Il est nécessaire d'installer
 
 
 ==== Comment construire Gate3 ====
+
 
 
 *********************     OBLIGATOIRE   **********************************
@@ -52,29 +53,18 @@ localisation par defaut :  /usr/share/ada/adainclude
 **************************************************************************
 
 La construction se fait avec le fichier script :
-Linux      : ajuster les permissions des scripts > chmod
-             ./build.sh
+$make
 
-Windows    : build.bat
-             NOTICE IMPORTANTE : pour Windows utiliser LIBRARY_TYPE=relocatable
-                                 le lien statique de Gtk ne fonctionne pas.
-
-le script de construction compile Gate3 et lance le test simple.glade.
-
+Le script de construction compile Gate3 et lance le test simple.glade.
 
 ==== Installation ====
 
 1/Editer le fichier de license gate3_license.txt à votre convenance
 
-2/Copier les fichiers suivants dans le repertoire de votre choix
- (e.g. /usr/local/bin)
-
-gate3               -- executable
-gate3_license.txt   -- fichiers template
-gate3_body.tmplt
-gate3_main.tmplt
-gate3_header.tmplt
-gate3_spec.tmplt
+2/Installation dans le repertoire de votre choix (par defaut /usr/local)
+$ make install
+ou dans un répertoire personnalisé
+$ make PREFIX=/path/to/dir install
 
 
 ==== Utilisation de Glade3 ====
@@ -86,6 +76,7 @@ Options:
     -m proc_name              Proc_Name : Ada main procedure name
     -d some/dir               recherche le fichier d'entrée dans some/dir
     -o some/dir               some/dir : repertoire de sortie
+    -t some/dir               some/dir : directory for templates
     -p                        crée le repertoire de sortie s'il n'existe pas.
 
 
@@ -101,7 +92,7 @@ Options:
 *** CES FICHIERS SONT POUR GLADE 3.8 et NE SONT PAS GARANTIS AVEC GLADE 3.12 **
 
 Pour produire le code des exemples :
-utiliser ./sample.sh (ou sample.bat pour Windows)
+make <le nom de l'exemple>
 
 Lire le fichier GUIDE_gate3_FR.txt pour un tutoriel sur Glade.
 
@@ -124,12 +115,12 @@ tests.
 Remerciements à Pascal Pignard pour ses contributions, les tests sur Apple, et le template Gtk3.
 
 
-==== Generation de code Gtk3 ====
+==== Generation de code Gtk2 ====
 
-Il n'y a pas de switch pour generer du code Gtk2/Gtk3 simultanement. 
+Il n'y a pas de switch pour generer du code Gtk2/Gtk3 simultanement.
 Cela necessiterait une nouvelle version de gate3.
 Cependant, avec un remplacement de template pour le <main>, vous pouvez generer du code utilsable avec Gtk3.
 En 2 étapes :
-1/ renommer le fichier [gate3_main.tmplt] en [gate3_main_gtk2.tmplt] (pour le sauvegarder).
-2/ renommer le fichier [gate3_main_gtk3.tmplt] en [gate3_main.tmplt]
+1/ renommer le fichier [gate3_main.tmplt] en [gate3_main_gtk3.tmplt] (pour le sauvegarder).
+2/ renommer le fichier [gate3_main_gtk2.tmplt] en [gate3_main.tmplt]
 

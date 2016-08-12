@@ -49,11 +49,12 @@ project Gate3 is
    end Pretty_Printer;
 
    package Install is
-      for Artifacts ("share/gate3/tmplt") use ("*.tmplt", "gate3_license.txt");
-      for Artifacts ("share/gate3/doc") use ("GUIDE_gate3_??.txt");
-      for Artifacts ("share/gate3") use ("tutorial");
-      for Artifacts ("share/gate3") use ("glade");
-      for Artifacts ("bin") use ("gate3.sh");
+      for mode use "usage";
+      for install_name use "gate3";
+      for Artifacts ("share/gate3/tmplt") use ("../template/*.tmplt", "../template/gate3_license.txt");
+      for Artifacts ("share/gate3/doc") use ("../doc/GUIDE_gate3_??.txt");
+      for Artifacts ("share/gate3") use ("../tutorial");
+      for Artifacts ("bin") use ("../gate3.sh");
    end Install;
 
 end Gate3;

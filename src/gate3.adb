@@ -19,7 +19,7 @@
 ------------------------------------------------------------------------------
 --  Legal licensing note:
 --
---  Copyright (c) Francois Fabien 2012/2013
+--  Copyright (c) Francois Fabien 2012/2013/2016
 --  FRANCE
 --
 --  Gate3 web site : https://sourceforge.net/projects/lorenz/
@@ -65,7 +65,7 @@ procedure Gate3 is
 
    package UBS renames Ada.Strings.Unbounded;
 
-   Version : constant String := "0.4 (4-Jan-2013)";
+   Version : constant String := "0.5 (8-Aug-2016)";
    -- gate3 version and release date
 
    Cmd : constant String := Ada.Command_Line.Command_Name;

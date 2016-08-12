@@ -36,7 +36,7 @@ tmp=$gt/tmp
 /bin/rm -rf $tmp
 mkdir $tmp
 wd=`pwd`
-`dirname $0`/gate3 -o $tmp $file
+`dirname $0`/gate3 -o $tmp $file -t `dirname $0`/../share/gate3/tmplt
 
 if [ $? != 0 ]; then
   echo "Couldn't generate Ada code. Exiting."
