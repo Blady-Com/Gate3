@@ -12,7 +12,7 @@ project Sample is
    for Source_Dirs use ("code");
 
    package Compiler is
-      for Default_Switches ("ada") use ("-O2", "-gnat05", "-gnatwa", "-gnata", "-fstack-check");
+      for Default_Switches ("ada") use ("-O2", "-gnatwa", "-gnata", "-fstack-check");
    end Compiler;
 
    package Builder is
