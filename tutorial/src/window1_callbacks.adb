@@ -1,10 +1,9 @@
 --
 -- copyright Pascal Pignard
 -- web site :
---- http://blady.pagesperso-orange.fr/telechargements/gtkada/Essai2a.tgz
+-- https://blady.pagesperso-orange.fr/a_savoir.html#gtkada
 --
 with Glib;                        use Glib;
-with Gtk.Object;                  use Gtk.Object;
 with Gtk.Enums;                   use Gtk.Enums;
 with Gtk.Main;
 with Ada.Long_Long_Float_Text_IO;
@@ -36,7 +35,7 @@ package body Window1_Callbacks is
    is
 
       S : constant UTF8_String :=
-         Get_Text (Gtk_Entry (Get_Widget (Builder, "entry1")));
+         Get_Text (Gtk_Entry (Get_Object (Builder, "entry1")));
 
       function Factorielle (N : Natural) return Long_Long_Integer is
          F : Long_Long_Integer := 1;
@@ -57,27 +56,27 @@ package body Window1_Callbacks is
          Ada.Long_Long_Float_Text_IO.Put
            (S,
             F,
-            Integer (Gtk_Hscale (Get_Widget (Builder, "hscale1")).Get_Value),
+            Integer (Gtk_Hscale (Get_Object (Builder, "hscale1")).Get_Value),
             6);
          return S;
       end Factorielle;
 
    begin
 
-      if Gtk_Check_Button (Get_Widget (Builder, "checkbutton1")).Get_Active
+      if Gtk_Check_Button (Get_Object (Builder, "checkbutton1")).Get_Active
       then
          Set_Text
-           (Gtk_Label (Get_Widget (Builder, "label3")),
+           (Gtk_Label (Get_Object (Builder, "label3")),
             Long_Long_Integer'Image (Factorielle (Natural'Value (S))));
       else
          Set_Text
-           (Gtk_Label (Get_Widget (Builder, "label3")),
+           (Gtk_Label (Get_Object (Builder, "label3")),
             Factorielle (Natural'Value (S)));
       end if;
    exception
       when others =>
          Set_Text (
-           Gtk_Label (Get_Widget (Builder, "label3")), "Wrong value !");
+           Gtk_Label (Get_Object (Builder, "label3")), "Wrong value !");
    end On_Button2_Clicked;
 
    -----------------------------
