@@ -21,9 +21,12 @@ project Gate3 is
    for Main use ("gate3.adb");
 
    Common_Options :=
-     ("-gnat12", "-gnaty3abCefhiklnOprStuM99");
+     ("-gnat12", "-gnaty3abCefhiklnOprStuM99", "-gnatf", "-gnatU");
    Debug_Options :=
-     ("-g", "-gnata", "-gnatVa", "-gnatQ", "-gnato", "-Wall", "-fstack-check", "-gnatw.eH.YD");
+    ("-gnatVaep", "-gnatw.eDH.Y",
+     "-fstack-check", "-g", "-gnato", "-gnata", "-gnateA",
+      "-gnateE", "-gnateF", "-gnateV", "-Wall", "-gnatQ",
+      "-gnatec=" & Gate3'Project_Dir & "../pragma_debug.adc");
    Release_Options :=
      ("-O2", "-gnatn");
 
@@ -37,11 +40,11 @@ project Gate3 is
    end Compiler;
 
    package Binder is
-      for Default_Switches ("Ada") use ("-E");
+      for Default_Switches ("Ada") use ("-Es");
    end Binder;
 
    package Builder is
-      for Default_Switches ("ada") use ("-s", "-m");
+      for Default_Switches ("ada") use ("-s", "-m", "-g");
    end Builder;
 
    package Pretty_Printer is

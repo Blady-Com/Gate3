@@ -12,12 +12,18 @@ project Sample is
    for Source_Dirs use ("code");
 
    package Compiler is
-      for Default_Switches ("ada") use ("-O2", "-gnatwa", "-gnata", "-fstack-check");
+    for Switches ("ada") use ("-gnatf", "-gnatU", "-gnatVaep", "-gnatw.eDH.Y",
+     "-fstack-check", "-g", "-gnato", "-gnata", "-gnateA",
+      "-gnateE", "-gnateF", "-gnateV", "-Wall");
    end Compiler;
 
    package Builder is
-      for Default_Switches ("ada") use ("-s", "-m");
+      for Default_Switches ("ada") use ("-s", "-m", "-g");
    end Builder;
+
+   package Binder is
+      for Default_Switches ("Ada") use ("-Es");
+   end Binder;
 
 end Sample;
 
