@@ -59,7 +59,7 @@ Conflicts have been kept in the following files to help merging manually:
 
   for j in $files; do
     if [ -f $j ]; then
-      /usr/bin/merge $j $gt/$j $tmp/$j 2>/dev/null
+      merge $j $gt/$j $tmp/$j 2>/dev/null
     else
       cp $tmp/$j $j
     fi
